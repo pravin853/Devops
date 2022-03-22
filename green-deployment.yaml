@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx-green
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx-green
+        # version: "2.0"
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/index.html
+          name: nginx-conf
+          subPath: index.html
+      volumes:
+      - name: nginx-conf
+        configMap:
+           name:  index-html-configmap-green
